@@ -47,9 +47,11 @@ next-env.d.ts
 # OS
 Thumbs.db
 
-# Google credentials (보안상 중요)
+# Google credentials (보안상 중요 - 절대 커밋하지 마세요!)
 **/client_secret*.json
 **/service-account*.json
 **/*credentials*.json
 **/*.apps.googleusercontent.com.json
 docs/client_secret*.json
+docs/*client_secret*.json
+**/*.googleusercontent.com.json
