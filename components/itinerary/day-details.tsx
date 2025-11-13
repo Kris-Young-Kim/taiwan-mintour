@@ -1,5 +1,9 @@
+"use client"
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Clock, Utensils } from "lucide-react"
+import { Clock, Utensils, MapPin, Info } from "lucide-react"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { motion } from "framer-motion"
 
 export default function DayDetails() {
   const days = [
@@ -179,103 +183,139 @@ export default function DayDetails() {
     <section className="py-16 sm:py-24">
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="space-y-12">
-          {days.map((day) => (
-            <div key={day.day} className="space-y-6">
-              {/* Day Header */}
-              <div className="flex items-center gap-4">
-                <div className="flex-shrink-0">
-                  <div className="flex items-center justify-center w-16 h-16 bg-accent text-primary rounded-full font-bold text-2xl">
+          {days.map((day, dayIndex) => (
+            <motion.div
+              key={day.day}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: dayIndex * 0.1 }}
+              className="space-y-6"
+            >
+              {/* Day Header with Timeline */}
+              <div className="flex items-start gap-4">
+                <div className="flex flex-col items-center">
+                  <div className="flex items-center justify-center w-16 h-16 bg-accent text-primary rounded-full font-bold text-2xl z-10 relative">
                     Day {day.day}
                   </div>
+                  {dayIndex < days.length - 1 && (
+                    <div className="w-0.5 h-full min-h-[100px] bg-border mt-2" />
+                  )}
                 </div>
-                <div>
+                <div className="flex-1">
                   <h2 className="text-3xl font-bold">{day.title}</h2>
                   <p className="text-foreground/70 mt-1">{day.date}</p>
                 </div>
               </div>
 
-              {/* Schedule */}
-              <Card className="border-primary/20">
-                <CardHeader>
-                  <CardTitle className="text-lg">이동 일정</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {day.schedule.map((item, idx) => (
-                      <div key={idx} className="flex gap-4 pb-3 border-b border-border/50 last:pb-0 last:border-0">
-                        <div className="flex-shrink-0 w-20">
-                          <p className="font-bold text-accent">{item.time}</p>
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-semibold">{item.activity}</p>
-                          {item.airline && <p className="text-xs text-foreground/60 mt-1">{item.airline}</p>}
-                          {item.note && <p className="text-xs text-foreground/60 mt-1">{item.note}</p>}
+              {/* Accordion for Day Details */}
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value={`day-${day.day}`} className="border-primary/20">
+                  <AccordionTrigger className="text-lg font-semibold hover:no-underline">
+                    상세 일정 보기
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-6 pt-4">
+                      {/* Schedule */}
+                      <Card className="border-primary/20">
+                        <CardHeader>
+                          <CardTitle className="text-lg">이동 일정</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-3">
+                            {day.schedule.map((item, idx) => (
+                              <div key={idx} className="flex gap-4 pb-3 border-b border-border/50 last:pb-0 last:border-0">
+                                <div className="flex-shrink-0 w-20">
+                                  <p className="font-bold text-accent">{item.time}</p>
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-semibold">{item.activity}</p>
+                                  {item.airline && <p className="text-xs text-foreground/60 mt-1">{item.airline}</p>}
+                                  {item.note && <p className="text-xs text-foreground/60 mt-1">{item.note}</p>}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* Attractions */}
+                      <div className="space-y-4">
+                        <h3 className="text-xl font-bold flex items-center gap-2">
+                          <MapPin className="text-accent" size={20} />
+                          주요 관광지
+                        </h3>
+                        <div className="grid md:grid-cols-2 gap-4">
+                          {day.attractions.map((attraction, idx) => (
+                            <Card key={idx} className="overflow-hidden hover:shadow-lg transition-shadow">
+                              <div
+                                className="h-48 bg-cover bg-center relative group cursor-pointer"
+                                style={{ backgroundImage: `url('${attraction.image}')` }}
+                              >
+                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
+                                {attraction.name.includes("⭐") && (
+                                  <div className="absolute top-2 right-2 bg-accent text-primary px-2 py-1 rounded text-xs font-bold">
+                                    추천
+                                  </div>
+                                )}
+                              </div>
+                              <CardContent className="pt-4">
+                                <h4 className="font-bold text-lg mb-1">{attraction.name}</h4>
+                                <p className="text-accent text-sm font-semibold mb-2">{attraction.description}</p>
+                                <p className="text-sm text-foreground/80 mb-3">{attraction.details}</p>
+                                <div className="flex items-center gap-4 text-xs text-foreground/60">
+                                  <div className="flex items-center gap-1">
+                                    <Clock size={14} />
+                                    <span>{attraction.time}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1 text-primary">
+                                    <Info size={14} />
+                                    <span>입장료 포함</span>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          ))}
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
 
-              {/* Attractions */}
-              <div className="space-y-4">
-                <h3 className="text-2xl font-bold">주요 관광지</h3>
-                <div className="grid md:grid-cols-2 gap-4">
-                  {day.attractions.map((attraction, idx) => (
-                    <Card key={idx} className="overflow-hidden hover:shadow-lg transition-shadow">
-                      <div
-                        className="h-40 bg-cover bg-center"
-                        style={{ backgroundImage: `url('${attraction.image}')` }}
-                      />
-                      <CardContent className="pt-4">
-                        <h4 className="font-bold text-lg mb-1">{attraction.name}</h4>
-                        <p className="text-accent text-sm font-semibold mb-2">{attraction.description}</p>
-                        <p className="text-sm text-foreground/80 mb-3">{attraction.details}</p>
-                        <div className="flex items-center gap-2 text-xs text-foreground/60">
-                          <Clock size={14} />
-                          <span>{attraction.time}</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
+                      {/* Meals */}
+                      <Card className="bg-accent/5 border-accent/20">
+                        <CardContent className="pt-6">
+                          <div className="grid grid-cols-3 gap-4">
+                            <div className="text-center">
+                              <Utensils className="text-accent mx-auto mb-2" size={20} />
+                              <p className="text-xs text-foreground/60 mb-1">조식</p>
+                              <p className="font-semibold">{day.meals.breakfast || "제공 안함"}</p>
+                            </div>
+                            <div className="text-center">
+                              <Utensils className="text-accent mx-auto mb-2" size={20} />
+                              <p className="text-xs text-foreground/60 mb-1">중식</p>
+                              <p className="font-semibold">{day.meals.lunch || "제공 안함"}</p>
+                            </div>
+                            <div className="text-center">
+                              <Utensils className="text-accent mx-auto mb-2" size={20} />
+                              <p className="text-xs text-foreground/60 mb-1">석식</p>
+                              <p className="font-semibold">{day.meals.dinner || "제공 안함"}</p>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
 
-              {/* Meals */}
-              <Card className="bg-accent/5 border-accent/20">
-                <CardContent className="pt-6">
-                  <div className="grid grid-cols-3 gap-4">
-                    <div className="text-center">
-                      <Utensils className="text-accent mx-auto mb-2" size={20} />
-                      <p className="text-xs text-foreground/60 mb-1">조식</p>
-                      <p className="font-semibold">{day.meals.breakfast || "제공 안함"}</p>
+                      {/* Hotel */}
+                      {day.hotel !== "해당 없음" && (
+                        <Card className="bg-primary/5 border-primary/20">
+                          <CardContent className="pt-6">
+                            <p className="text-foreground/70 mb-1">숙박</p>
+                            <p className="font-bold text-lg">{day.hotel}</p>
+                          </CardContent>
+                        </Card>
+                      )}
                     </div>
-                    <div className="text-center">
-                      <Utensils className="text-accent mx-auto mb-2" size={20} />
-                      <p className="text-xs text-foreground/60 mb-1">중식</p>
-                      <p className="font-semibold">{day.meals.lunch || "제공 안함"}</p>
-                    </div>
-                    <div className="text-center">
-                      <Utensils className="text-accent mx-auto mb-2" size={20} />
-                      <p className="text-xs text-foreground/60 mb-1">석식</p>
-                      <p className="font-semibold">{day.meals.dinner || "제공 안함"}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Hotel */}
-              {day.hotel !== "해당 없음" && (
-                <Card className="bg-primary/5 border-primary/20">
-                  <CardContent className="pt-6">
-                    <p className="text-foreground/70 mb-1">숙박</p>
-                    <p className="font-bold text-lg">{day.hotel}</p>
-                  </CardContent>
-                </Card>
-              )}
-
-              <hr className="border-border/30" />
-            </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            </motion.div>
           ))}
         </div>
       </div>
