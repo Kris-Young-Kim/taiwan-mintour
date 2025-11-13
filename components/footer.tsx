@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Phone, Mail, MessageCircle } from "lucide-react";
+import { Phone, Mail, MessageCircle, Facebook, Instagram } from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -96,6 +96,43 @@ export default function Footer() {
           <p className="text-xs text-foreground/60 mt-4">
             운영시간: 평일 09:00-18:00
           </p>
+        </div>
+
+        {/* SNS Links */}
+        <div className="border-t border-border pt-8 mb-8">
+          <h3 className="font-semibold text-foreground mb-4">소셜 미디어</h3>
+          <div className="flex gap-4">
+            <a
+              href="https://www.facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-foreground/60 hover:text-primary transition-colors"
+              aria-label="페이스북"
+            >
+              <Facebook size={20} />
+              <span className="text-sm">페이스북</span>
+            </a>
+            <a
+              href="https://www.instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-foreground/60 hover:text-primary transition-colors"
+              aria-label="인스타그램"
+            >
+              <Instagram size={20} />
+              <span className="text-sm">인스타그램</span>
+            </a>
+            <a
+              href="https://pf.kakao.com/_MINTOUR"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-foreground/60 hover:text-primary transition-colors"
+              aria-label="카카오톡 채널"
+            >
+              <MessageCircle size={20} />
+              <span className="text-sm">카카오톡 채널</span>
+            </a>
+          </div>
         </div>
 
         {/* Bottom Section */}
