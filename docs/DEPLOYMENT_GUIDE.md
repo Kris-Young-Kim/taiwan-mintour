@@ -213,6 +213,29 @@ Vercel과 GitHub를 연결하면:
 
 ## 문제 해결
 
+### 배포 오류 (DEPLOYMENT_NOT_FOUND)
+
+**오류 메시지:**
+```
+404: NOT_FOUND
+Code: DEPLOYMENT_NOT_FOUND
+```
+
+**해결 방법:**
+
+1. **리전 설정 확인**
+   - `vercel.json`에서 `regions` 설정이 올바른지 확인
+   - 잘못된 리전 코드는 제거하거나 Vercel 기본 리전 사용
+   - Next.js는 Vercel이 자동으로 최적의 리전을 선택합니다
+
+2. **배포 상태 확인**
+   - Vercel 대시보드 → Deployments에서 배포 상태 확인
+   - 배포가 실패했거나 삭제되었는지 확인
+
+3. **재배포**
+   - 새로운 배포를 트리거하여 문제 해결
+   - GitHub에 push하거나 Vercel 대시보드에서 "Redeploy" 클릭
+
 ### 빌드 실패
 
 1. **환경 변수 누락**
