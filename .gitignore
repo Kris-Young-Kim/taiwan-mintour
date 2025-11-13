@@ -51,3 +51,5 @@ Thumbs.db
 **/client_secret*.json
 **/service-account*.json
 **/*credentials*.json
+**/*.apps.googleusercontent.com.json
+docs/client_secret*.json
